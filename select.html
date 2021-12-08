@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="main.css" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body>
+
+    <header id="titlebar">
+        <div id="drag-region">
+            <div id="window-title">
+                <span>Nitrogen Installer</span>
+            </div>
+            <div id="window-controls">
+      
+                <div class="button" id="min-button">
+                <img class="icon" srcset="icons/min-w-10.png 1x, icons/min-w-12.png 1.25x, icons/min-w-15.png 1.5x, icons/min-w-15.png 1.75x, icons/min-w-20.png 2x, icons/min-w-20.png 2.25x, icons/min-w-24.png 2.5x, icons/min-w-30.png 3x, icons/min-w-30.png 3.5x" draggable="false" />
+                </div>
+        
+                <div class="button" id="max-button">
+                <img class="icon" srcset="icons/max-w-10.png 1x, icons/max-w-12.png 1.25x, icons/max-w-15.png 1.5x, icons/max-w-15.png 1.75x, icons/max-w-20.png 2x, icons/max-w-20.png 2.25x, icons/max-w-24.png 2.5x, icons/max-w-30.png 3x, icons/max-w-30.png 3.5x" draggable="false" />
+                </div>
+        
+                <div class="button" id="restore-button">
+                <img class="icon" srcset="icons/restore-w-10.png 1x, icons/restore-w-12.png 1.25x, icons/restore-w-15.png 1.5x, icons/restore-w-15.png 1.75x, icons/restore-w-20.png 2x, icons/restore-w-20.png 2.25x, icons/restore-w-24.png 2.5x, icons/restore-w-30.png 3x, icons/restore-w-30.png 3.5x" draggable="false" />
+                </div>
+        
+                <div class="button" id="close-button">
+                <img class="icon" srcset="icons/close-w-10.png 1x, icons/close-w-12.png 1.25x, icons/close-w-15.png 1.5x, icons/close-w-15.png 1.75x, icons/close-w-20.png 2x, icons/close-w-20.png 2.25x, icons/close-w-24.png 2.5x, icons/close-w-30.png 3x, icons/close-w-30.png 3.5x" draggable="false" />
+                </div>
+      
+            </div>
+        </div>
+    </header>
+  
+    <div id="main">
+        <h1>모드 선택 (되도록이면 기본값을 추천합니다)</h1>
+        <br/><br/>
+        <label class="container">Fabric Loader/API(필수)
+            <input type="checkbox" checked disabled>
+            <span class="checkmark"></span>
+        </label>
+        <label class="container">최적화 모드(Sodium, Litium 등등 포함) (권장)
+            <input type="checkbox" checked id="optimize">
+            <span class="checkmark"></span>
+        </label>
+        <label class="container">최적화 모드2 (옵티파인, 직접설치 필요)
+            <input type="checkbox" id="optifine">
+            <span class="checkmark"></span>
+        </label>
+        <label class="container">유틸 모드(HUD 모드 등등)
+            <input type="checkbox" checked id="util">
+            <span class="checkmark"></span>
+        </label>
+        <label class="container">FlagPvP Addon(FlagPvP AutoGG 등등)
+            <input type="checkbox" checked id="flagpvp">
+            <span class="checkmark"></span>
+        </label>
+        <br/><br/>
+        <a class="btn glow-button" target="_blank" id="install">설치!</a>
+    </div>
+  
+    <script>
+      require('./renderer.js')
+    </script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "name": "nitrogen-installer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^16.0.4",
+    "electron-builder": "^22.14.5"
+  },
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "decompress": "^4.2.1",
+    "follow-redirects": "^1.14.5",
+    "moment": "^2.29.1",
+    "node-7z": "^3.0.0"
+  },
+  "build": {
+    "appId": "xyz.r2turntrue.nitrogen",
+    "win": {
+      "target": "portable",
+      "icon": "./icon.ico"
+    }
+  }
+}
