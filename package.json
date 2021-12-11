@@ -24,7 +24,7 @@
     },
     "mac": {
       "target": "tar.xz",
-      "icon": 
+      "icon": "icon.icns"
     }
   }
 }
