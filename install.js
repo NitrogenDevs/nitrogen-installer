@@ -168,6 +168,10 @@ async function ready() {
     const launcherProfiles = path.join(mcDir, 'launcher_profiles.json')
     const launcherProfilesMs = path.join(mcDir, 'launcher_profiles_microsoft_store.json')
 
+    if(!fsR.existsSync(mcDir)) {
+        await fs.mkdir(mcDir)
+    }
+
     ipcRenderer.send('getMod')
 
     console.log('Minecraft Directory: ' + mcDir)
@@ -306,6 +310,8 @@ async function ready() {
 
 document.onreadystatechange = (ev) => {
     if(document.readyState == "complete") {
-        ready()
+        ready().catch((err) => {
+            ipcRenderer.send('error', err.stack)
+        })
     }
 }

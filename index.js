@@ -83,6 +83,15 @@ ipcMain.on('fine', (evt, payload) => {
     })
 })
 
+ipcMain.on('error', (evt, payload) => {
+    dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
+        type: 'error',
+        message: '설치 도중 오류가 발생하였습니다!\n' + payload
+    }).then((act) => {
+        process.exit(0)
+    })
+})
+
 app.whenReady().then(() => {
     createWindow()
   
