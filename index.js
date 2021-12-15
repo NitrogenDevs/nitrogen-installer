@@ -23,7 +23,7 @@ const createWindow = () => {
     win.on('unmaximize', (evt, isAlwaysOnTop) => {
         win.webContents.send('unmaxReply', false)
     })
-  
+
     win.loadFile('index.html')
 }
 
