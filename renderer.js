@@ -37,6 +37,7 @@ function handleWindowControls() {
     } catch {}
 
     // Toggle maximise/restore buttons when maximisation/unmaximisation occurs
+
     toggleMaxRestoreButtons();
     ipcRenderer.on('maxReply', toggleMaxRestoreButtons)
     ipcRenderer.on('unmaxReply', toggleMaxRestoreButtons)
@@ -52,6 +53,17 @@ function handleWindowControls() {
             document.body.classList.remove('maximized');
         }
     }
+
+    try {
+        addEventListener('change', function() {
+            if(document.getElementById('optifine').checked && document.getElementById('optimize').checked) {
+                alert("같이 선택할 수 없습니다!");
+                document.getElementById('optifine').checked = false
+                document.getElementById('optimize').checked = false
+            }
+        });
+    } catch {}
+
 
     try {
         document.getElementById('install').addEventListener("click", event => {
