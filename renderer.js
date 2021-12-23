@@ -59,6 +59,7 @@ function handleWindowControls() {
             if(document.getElementById('optifine').checked && document.getElementById('optimize').checked) {
                 alert("같이 선택할 수 없습니다!");
                 event.target.checked = false;
+                
             }
         });
     } catch {}
