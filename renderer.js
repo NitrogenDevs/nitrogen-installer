@@ -64,11 +64,6 @@ function handleWindowControls() {
         });
     } catch {}
 
-    setTimeout(function() {
-        document.getElementById("i").src="icons/icon.png";
-    }, 3000);
-
-
     try {
         document.getElementById('install').addEventListener("click", event => {
             ipcRenderer.send('setMod', [
