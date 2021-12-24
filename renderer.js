@@ -63,6 +63,28 @@ function handleWindowControls() {
             }
         });
     } catch {}
+    
+    
+
+    const content = "Nitrogen";
+    const text = document.querySelector("#text");
+    let i = 0;
+
+    function typing(){
+        let txt = content[i++];
+        text.innerHTML += txt;
+        if (i > content.length) {
+            text.textContent = " ";
+            i = 0;
+        }
+    }
+    setInterval(typing, 500)
+
+
+
+    setTimeout(function() {
+        document.getElementById("i").src="icons/icon.png";
+    }, 3000);
 
 
     try {
