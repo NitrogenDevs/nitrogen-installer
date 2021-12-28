@@ -11,6 +11,7 @@ let sevenZipBin = '7z'
 let javaBin = 'java'
 const { https } = require('follow-redirects')
 const decompress = require('decompress')
+const unlink = require('fs')
 
 function exec(prc, cbk) {
     console.log('Executing: ' + prc)
@@ -99,6 +100,15 @@ async function applyMod(url, name) {
     await unzip(fileName, path.join(mcDir, 'mods'))
 }
 
+async function deleteFile(filename) {
+    const mcDir = getMinecraftDirectory()
+    const filePath = path.join(mcDir, filename);
+
+    fs.unlink(filePath, (err) => err ?  
+        console.log(err) : console.log(filePath + "delete...")
+    );
+}
+
 async function install7z() {
     const mcDir = getMinecraftDirectory()
     const tarxz = path.join(mcDir, 'sevenzip.zip')
@@ -181,7 +191,7 @@ async function ready() {
     await installJava()
 
     statText.innerHTML = 'Backup before mods...'
-    status.innerHTML = '1/4'
+    status.innerHTML = '1/5'
     
     if(fsR.existsSync(mods)) {
         await fs.rename(mods, path.join(mcDir, 'mods_' + moment().format('yyyy_MM_dd_hh_mm_ss')))
@@ -189,7 +199,7 @@ async function ready() {
     await fs.mkdir(mods)
 
     statText.innerHTML = 'Installing Loader...'
-    status.innerHTML = '2/4'
+    status.innerHTML = '2/5'
 
     await download('https://maven.fabricmc.net/net/fabricmc/fabric-installer/0.10.2/fabric-installer-0.10.2.jar', path.join(mcDir, 'fab-i.jar'))
 
@@ -205,7 +215,7 @@ async function ready() {
     const date = new Date()
 
     statText.innerHTML = 'Creating profile...'
-    status.innerHTML = '3/4'
+    status.innerHTML = '3/5'
 
     const versionJson = {
         id: "nitrogen-0.0.1",
@@ -286,7 +296,7 @@ async function ready() {
     }
 
     statText.innerHTML = 'Installing mods...'
-    status.innerHTML = '4/4'
+    status.innerHTML = '4/5'
 
     await applyMod('https://raw.githubusercontent.com/R2turnTrue/Nitrogen/main/Required.7z', 'req')
 
@@ -304,6 +314,15 @@ async function ready() {
             await applyMod('https://raw.githubusercontent.com/R2turnTrue/Nitrogen/main/FlagPvpAddon.7z', 'fpvp')
         }
     }
+
+    statText.innerHTML = 'remove 7z file ...'
+    status.innerHTML = '5/5'
+
+    await deleteFile('req.7z')
+    await deleteFile('sevenzip.zip')
+    await deleteFile('opt.7z')
+    await deleteFile('fpvp.7z')
+    await deleteFile('util.7z')
 
     await ipcRenderer.send('fine')
 }
