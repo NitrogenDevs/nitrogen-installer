@@ -6,7 +6,8 @@ const fsR = require('fs')
 const moment = require('moment')
 const child_process = require('child_process')
 const { ipcRenderer } = require('electron')
-let modSelected
+let modSelected = []
+let version = []
 let sevenZipBin = '7z'
 let javaBin = 'java'
 const { https } = require('follow-redirects')
@@ -19,6 +20,10 @@ function exec(prc, cbk) {
 
 ipcRenderer.on('gotMod', (evt, arg) => {
     modSelected = arg
+})
+
+ipcRenderer.on('gotVersion', (evt, arg) => {
+    version = arg
 })
 
 function unzip(zipPath, unzipToDir) {
@@ -173,6 +178,7 @@ async function ready() {
     }
 
     ipcRenderer.send('getMod')
+    ipcRenderer.send('getVersion')
 
     console.log('Minecraft Directory: ' + mcDir)
 
@@ -200,7 +206,20 @@ async function ready() {
         await fs.mkdir(profile)
     }
     
-    await runProcess(`"${javaBin}" -jar "${path.join(mcDir, 'fab-i.jar')}" client -mcversion 1.17.1 -loader 0.12.8 -noprofile`)
+    let mcversion = '1.18.1'
+    let loader = '0.12.12'
+    let libraries = require('./libraries_1181')
+
+    if(version[1]) {
+        mcversion = '1.17.1'
+        loader = '0.12.8'
+        libraries = require('./libraries_1171')
+    }
+    console.log(libraries)
+
+    console.log('Installing with: ' + mcversion + '-' + loader)
+
+    await runProcess(`"${javaBin}" -jar "${path.join(mcDir, 'fab-i.jar')}" client -mcversion ${mcversion} -loader ${loader} -noprofile`)
 
     const date = new Date()
 
@@ -209,7 +228,7 @@ async function ready() {
 
     const versionJson = {
         id: "nitrogen-0.0.1",
-        inheritsFrom: "1.17.1",
+        inheritsFrom: mcversion,
         releaseTime: date.toISOString(),
         time: date.toISOString(),
         type: "release",
@@ -220,52 +239,7 @@ async function ready() {
             "-DFabricMcEmu= net.minecraft.client.main.Main "
           ]
         },
-        libraries: [
-          {
-            name: "net.fabricmc:tiny-mappings-parser:0.3.0+build.17",
-            url: "https://maven.fabricmc.net/"
-          },
-          {
-            name: "net.fabricmc:sponge-mixin:0.10.7+mixin.0.8.4",
-            url: "https://maven.fabricmc.net/"
-          },
-          {
-            name: "net.fabricmc:tiny-remapper:0.6.0",
-            url: "https://maven.fabricmc.net/"
-          },
-          {
-            name: "net.fabricmc:access-widener:2.0.1",
-            url: "https://maven.fabricmc.net/"
-          },
-          {
-            name: "org.ow2.asm:asm:9.2",
-            url: "https://maven.fabricmc.net/"
-          },
-          {
-            name: "org.ow2.asm:asm-analysis:9.2",
-            url: "https://maven.fabricmc.net/"
-          },
-          {
-            name: "org.ow2.asm:asm-commons:9.2",
-            url: "https://maven.fabricmc.net/"
-          },
-          {
-            name: "org.ow2.asm:asm-tree:9.2",
-            url: "https://maven.fabricmc.net/"
-          },
-          {
-            name: "org.ow2.asm:asm-util:9.2",
-            url: "https://maven.fabricmc.net/"
-          },
-          {
-            name: "net.fabricmc:intermediary:1.17.1",
-            url: "https://maven.fabricmc.net/"
-          },
-          {
-            name: "net.fabricmc:fabric-loader:0.12.8",
-            url: "https://maven.fabricmc.net/"
-          }
-        ]
+        libraries: libraries
     }
     const profileJson = {
         created: date.toISOString(),
@@ -288,20 +262,23 @@ async function ready() {
     statText.innerHTML = 'Installing mods...'
     status.innerHTML = '4/4'
 
-    await applyMod('https://raw.githubusercontent.com/R2turnTrue/Nitrogen/main/Required.7z', 'req')
+    let prefix = version[0] ? '1181_' : ''
+    console.log(prefix)
+
+    await applyMod(`https://raw.githubusercontent.com/R2turnTrue/Nitrogen/main/${prefix}Required.7z`, 'req')
 
     for(let i = 0; i < modSelected.length; i++) {
         const val = modSelected[i]
         if(!val) continue
 
         if(i === 0) {
-            await applyMod('https://raw.githubusercontent.com/R2turnTrue/Nitrogen/main/Optimization.7z', 'opt')
+            await applyMod(`https://raw.githubusercontent.com/R2turnTrue/Nitrogen/main/${prefix}Optimization.7z`, 'opt')
         } else if(i === 1) {
-            await applyMod('https://raw.githubusercontent.com/R2turnTrue/Nitrogen/main/Optimization_Optifine.7z', 'optf')
+            await applyMod(`https://raw.githubusercontent.com/R2turnTrue/Nitrogen/main/${prefix}Optimization_Optifine.7z`, 'optf')
         } else if(i === 2) {
-            await applyMod('https://raw.githubusercontent.com/R2turnTrue/Nitrogen/main/Util.7z', 'util')
+            await applyMod(`https://raw.githubusercontent.com/R2turnTrue/Nitrogen/main/${prefix}Util.7z`, 'util')
         } else if(i === 3) {
-            await applyMod('https://raw.githubusercontent.com/R2turnTrue/Nitrogen/main/FlagPvpAddon.7z', 'fpvp')
+            await applyMod(`https://raw.githubusercontent.com/R2turnTrue/Nitrogen/main/${prefix}FlagPvpAddon.7z`, 'fpvp')
         }
     }
 
@@ -311,7 +288,7 @@ async function ready() {
 document.onreadystatechange = (ev) => {
     if(document.readyState == "complete") {
         ready().catch((err) => {
-            ipcRenderer.send('error', err.stack)
+            ipcRenderer.send('error', err.stack, true)
         })
     }
 }

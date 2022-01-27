@@ -37,16 +37,18 @@
     </header>
   
     <div id="main">
-        <textarea readonly>
-Nitrogen을 선택해주셔서 감사합니다!
-Nitrogen은 Fabric 기반으로 만들어진 모드팩이며 Fabric 모드는 무엇이든 넣을 수 있습니다!
-
-중요: 이 모드팩을 설치시 mods가 덮어쓰기되지만 백업은 해드립니다.
-
-버그 발생시, https://discord.gg/YQ3nqt8xPg 에서 버그를 제보해주세요!
-        </textarea>
+        <h1>버전 선택</h1>
         <br/><br/>
-        <a class="btn glow-button" target="_blank" id="version">모두 읽었습니다.</a>
+        <label class="container">1.18.1 (BETA)
+            <input type="radio" id="1181" name="version" checked>
+            <span class="checkmark"></span>
+        </label>
+        <label class="container">1.17.1
+            <input type="radio" id="1171" name="version">
+            <span class="checkmark"></span>
+        </label>
+        <br/><br/>
+        <a class="btn glow-button" target="_blank" id="select">다음</a>
     </div>
   
     <script>

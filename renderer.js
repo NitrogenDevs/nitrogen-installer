@@ -1,9 +1,15 @@
 const {ipcRenderer} = require('electron');
 
 let isMaximized = false
+let version = []
+
+ipcRenderer.on('gotVersion', (evt, arg) => {
+    version = arg
+})
 
 document.onreadystatechange = (event) => {
     if (document.readyState == "complete") {
+        ipcRenderer.send('getVersion')
         handleWindowControls();
     }
 };
@@ -55,18 +61,42 @@ function handleWindowControls() {
 
     try {
         document.getElementById('install').addEventListener("click", event => {
+            const optimize = document.getElementById('optimize').checked
+            const optifine = document.getElementById('optifine').checked
+            const flagpvp = document.getElementById('flagpvp').checked
+
+            if(optimize && optifine) {
+                ipcRenderer.send('error', '최적화 옵션 1과 2를 동시에 선택할 수 없습니다!', false)
+                return
+            }
+
+            if((optifine || flagpvp) && version[0]) {
+                ipcRenderer.send('error', 'FlagPvP 애드온 또는 옵티파인은 1.18.1에서 사용할 수 없습니다!', false)
+                return
+            }
+
             ipcRenderer.send('setMod', [
-                document.getElementById('optimize').checked,
-                document.getElementById('optifine').checked,
+                optimize,
+                optifine,
                 document.getElementById('util').checked,
-                document.getElementById('flagpvp').checked
+                flagpvp
             ])
             ipcRenderer.send('goTo', 'install.html')
+        });
+    } catch {}
+    
+    try {
+        document.getElementById('version').addEventListener("click", event => {
+            ipcRenderer.send('goTo', 'version.html')
         });
     } catch {}
 
     try {
         document.getElementById('select').addEventListener("click", event => {
+            ipcRenderer.send('setVersion', [
+                document.getElementById('1181').checked,
+                document.getElementById('1171').checked
+            ])
             ipcRenderer.send('goTo', 'select.html')
         });
     } catch {}

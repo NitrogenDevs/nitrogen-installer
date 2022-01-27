@@ -4,6 +4,9 @@ const path = require('path')
 // optimization, optifine, util, flagpvp addons
 let willInstall = [true, false, true, true]
 
+// 1181, 1171
+let version = [true, false]
+
 const createWindow = () => {
     const win = new BrowserWindow({
       width: 800,
@@ -46,6 +49,15 @@ ipcMain.on('getMod', (evt, arg) => {
     evt.reply('gotMod', willInstall)
 })
 
+ipcMain.on('setVersion', (evt, arg) => {
+    console.log('Set version with: ' + arg)
+    version = arg
+})
+
+ipcMain.on('getVersion', (evt, arg) => {
+    evt.reply('gotVersion', version)
+})
+
 ipcMain.on('goTo', (evt, arg) => {
     BrowserWindow.getFocusedWindow().loadFile(arg)
 })
@@ -83,12 +95,13 @@ ipcMain.on('fine', (evt, payload) => {
     })
 })
 
-ipcMain.on('error', (evt, payload) => {
+ipcMain.on('error', (evt, payload, payload2) => {
     dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
         type: 'error',
         message: '설치 도중 오류가 발생하였습니다!\n' + payload
     }).then((act) => {
-        process.exit(0)
+        console.log(payload2)
+        if(payload2) process.exit(0)
     })
 })
 
