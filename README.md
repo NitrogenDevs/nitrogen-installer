@@ -25,6 +25,7 @@ Lithium(*)
 LazyDFU(*)
 FerriteCore(1.18.1)
 Hydrogen(1.17.1)
+EntityCulling(*)
 ```
 
 ### 유틸 모드
